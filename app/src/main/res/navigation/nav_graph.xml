@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/searchBook2">
+
+    <fragment
+        android:id="@+id/searchBook2"
+        android:name="com.example.visualbookshelffromgutenbergproject.fragments.SearchBook"
+        android:label="fragment_search_book"
+        tools:layout="@layout/fragment_search_book" >
+        <action
+            android:id="@+id/action_searchBook2_to_showBookDetails"
+            app:destination="@id/showBookDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/showBookDetails"
+        android:name="com.example.visualbookshelffromgutenbergproject.fragments.ShowBookDetails"
+        android:label="ShowBookDetails" >
+        <action
+            android:id="@+id/action_showBookDetails_to_searchBook2"
+            app:destination="@id/searchBook2" />
+        <argument
+            android:name="framentkey"
+            app:argType="com.example.visualbookshelffromgutenbergproject.data.models.BookModel$Result"
+            />
+    </fragment>
+</navigation>

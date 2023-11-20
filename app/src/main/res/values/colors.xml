@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#7E7E81</color> <!-- Tab color -->
+    <color name="colorPrimaryDark">#373739</color> <!-- Status bar color -->
+    <color name="colorAccent">#1C1C1C</color> <!-- Tab indicator color -->
+
+
+    <color name="main_color">#77B3D3</color>
+    <color name="grey">#caccd1</color>
+    <color name="light_grey">#caccd1</color>
+    <color name="high_light_grey">#EDECEC</color>
+</resources>
