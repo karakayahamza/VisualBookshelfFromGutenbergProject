@@ -21,7 +21,7 @@
             android:id="@+id/bookImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/settings"/>
+            android:src="@drawable/lib_out"/>
 
 
         <LinearLayout
@@ -45,11 +45,19 @@
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/textViewYear"
+                android:id="@+id/genre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Yayın Yılı"
+                android:text="Genre"
                 android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/copyright"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Copyright"
+                android:textSize="16sp"/>
+
         </LinearLayout>
     </LinearLayout>
 

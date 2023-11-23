@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/searchBook2"
-        android:name="com.example.visualbookshelffromgutenbergproject.fragments.SearchBook"
+        android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.SearchBook"
         android:label="fragment_search_book"
         tools:layout="@layout/fragment_search_book" >
         <action
@@ -16,14 +16,35 @@
     </fragment>
     <fragment
         android:id="@+id/showBookDetails"
-        android:name="com.example.visualbookshelffromgutenbergproject.fragments.ShowBookDetails"
-        android:label="ShowBookDetails" >
-        <action
-            android:id="@+id/action_showBookDetails_to_searchBook2"
-            app:destination="@id/searchBook2" />
+        android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.ShowBookDetails"
+        android:label="ShowBookDetails"
+        tools:layout="@layout/fragment_show_book_details"
+        >
         <argument
             android:name="framentkey"
             app:argType="com.example.visualbookshelffromgutenbergproject.data.models.BookModel$Result"
             />
+        <action
+            android:id="@+id/action_showBookDetails_to_searchBook2"
+            app:destination="@id/searchBook2" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookLibrary"
+        android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.BookLibrary"
+        android:label="fragment_book_library"
+        tools:layout="@layout/fragment_book_library" >
+        <action
+            android:id="@+id/action_bookLibrary_to_reader"
+            app:destination="@id/reader" />
+    </fragment>
+    <fragment
+        android:id="@+id/reader"
+        android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.Reader"
+        android:label="fragment_reader"
+        tools:layout="@layout/fragment_reader" >
+        <argument android:name="bookString"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

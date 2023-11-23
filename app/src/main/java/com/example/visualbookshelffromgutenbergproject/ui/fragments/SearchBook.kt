@@ -1,4 +1,4 @@
-package com.example.visualbookshelffromgutenbergproject.fragments
+package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.visualbookshelffromgutenbergproject.data.models.Book
-import com.example.visualbookshelffromgutenbergproject.view.viewmodel.BookViewModel
+import com.example.visualbookshelffromgutenbergproject.viewmodel.BookViewModel
 import com.example.visualbookshelffromgutenbergproject.utils.ItemClickListener
 import com.example.visualbookshelffromgutenbergproject.adapters.BookAdapter
 import com.example.visualbookshelffromgutenbergproject.data.models.BookModel
 import com.example.visualbookshelffromgutenbergproject.databinding.FragmentSearchBookBinding
+import kotlinx.coroutines.cancel
 
 
 class SearchBook : Fragment() {
@@ -44,23 +46,18 @@ class SearchBook : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         binding.search.setOnClickListener {
-            println("Book SEARCH: ${binding.searchBook.text}")
+            viewModel.viewModelScope.cancel()
+            bookList.clear()
             getData(binding.searchBook.text.toString())
         }
     }
 
-    fun getData(name:String){
-
+    private fun getData(name:String){
         viewModel.loadData(name)
         viewModel.books.observe(viewLifecycleOwner){books ->
             books?.let {
-
                 bookModel = it
-
-                println("Toplam kitap ${it.count}")
 
                 for(i in it.results){
 
@@ -69,17 +66,21 @@ class SearchBook : Fragment() {
                     val genre = if (i.bookshelves?.isNotEmpty() == true) i.bookshelves.get(0) else "Unknown Genre"
                     val copyright = i.copyright
                     val image = i.formats?.image_jpeg
+                    val plainText = i.formats?.text_plain
 
-                    val book2 = Book(image,title,author, genre, copyright)
+                    val book = Book(
+                        imageResource = image,
+                        title = title.toString(),
+                        author = author.toString(),
+                        genre = genre,
+                        copyright = copyright,
+                        text_plain_charsetus_ascii = plainText.toString()
+                    )
 
-                    addBook(book2)
-
+                    addBook(book)
                 }
-
                 setRecyclerView(it)
-
             }
-
         }
     }
 
@@ -90,11 +91,7 @@ class SearchBook : Fragment() {
         bookAdapter = BookAdapter(bookList)
         recyclerView.adapter = bookAdapter
 
-        for (i in bookList){
-            println(i.author)
-            println(i.title)
-            println(i.genre)
-        }
+
 
         bookAdapter.setOnItemClickListener(object : ItemClickListener {
             override fun onItemClickListener(position: Int) {
@@ -106,11 +103,9 @@ class SearchBook : Fragment() {
                 Toast.makeText(requireContext(),bookList[position].author,Toast.LENGTH_LONG).show()
             }
         })
-
     }
 
-    fun addBook(book: Book) {
+    private fun addBook(book: Book) {
         bookList = (bookList + listOf(book)).toMutableList()
     }
-
 }

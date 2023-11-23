@@ -35,15 +35,14 @@ class BookAdapter(private val bookList: MutableList<Book>) : RecyclerView.Adapte
     }
 
     inner class BookViewHolder(binding: BookItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val bookImageView: ImageView = itemView.findViewById(R.id.bookImageView)
-        private val bookTitleTextView: TextView = itemView.findViewById(R.id.bookTitleTextView)
-        private val bookAuthorTextView: TextView = itemView.findViewById(R.id.bookAuthorTextView)
-        private val bookGenreTextView: TextView = itemView.findViewById(R.id.bookGenreTextView)
-        private val copyrightTextView: TextView = itemView.findViewById(R.id.copyrightTextView)
+        private val bookImageView: ImageView = binding.bookImageView
+        private val bookTitleTextView: TextView = binding.textViewTitle
+        private val bookAuthorTextView: TextView = binding.textViewAuthor
+        private val bookGenreTextView: TextView = binding.genre
+        private val copyrightTextView: TextView = binding.copyright
 
 
         init {
-
             itemView.setOnClickListener{
                 val position = adapterPosition
 

@@ -1,4 +1,4 @@
-package com.example.visualbookshelffromgutenbergproject.data
+package com.example.visualbookshelffromgutenbergproject.data.remote
 
 import com.example.visualbookshelffromgutenbergproject.data.models.BookModel
 import retrofit2.http.GET
@@ -6,7 +6,5 @@ import retrofit2.http.Query
 
 interface BookAPI {
     @GET("books/?")
-    suspend fun getData(
-        @Query("search") name: String?
-    ): BookModel
+    suspend fun getData(@Query("search") name: String?): BookModel
 }

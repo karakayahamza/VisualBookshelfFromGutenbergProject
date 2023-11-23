@@ -1,12 +1,14 @@
-package com.example.visualbookshelffromgutenbergproject.view.viewmodel
+package com.example.visualbookshelffromgutenbergproject.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.visualbookshelffromgutenbergproject.data.BookAPI
+import androidx.lifecycle.viewModelScope
+import com.example.visualbookshelffromgutenbergproject.data.remote.BookAPI
 import com.example.visualbookshelffromgutenbergproject.data.models.BookModel
-import com.example.visualbookshelffromgutenbergproject.data.BookRepository
+import com.example.visualbookshelffromgutenbergproject.data.remote.repository.BookRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -52,5 +54,9 @@ class BookViewModel: ViewModel() {
         println("$throwable")
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
+    }
 
 }

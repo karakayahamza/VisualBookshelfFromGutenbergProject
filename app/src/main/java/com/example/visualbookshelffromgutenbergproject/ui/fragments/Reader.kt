@@ -1,11 +1,18 @@
-package com.example.visualbookshelffromgutenbergproject.fragments
+package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.visualbookshelffromgutenbergproject.databinding.FragmentBookShelfBinding
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
+import com.example.visualbookshelffromgutenbergproject.R
+import com.example.visualbookshelffromgutenbergproject.data.models.Book
+import com.example.visualbookshelffromgutenbergproject.databinding.FragmentBookLibraryBinding
+import com.example.visualbookshelffromgutenbergproject.databinding.FragmentReaderBinding
+import com.example.visualbookshelffromgutenbergproject.viewmodel.BookLocalViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,47 +22,49 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
+class Reader : Fragment() {
 
-class BookShelf : Fragment() {
-
-    private var _binding: FragmentBookShelfBinding? = null
+    private var _binding: FragmentReaderBinding? = null
     private val binding get() = _binding!!
+    val args: ReaderArgs by navArgs()
+    private lateinit var bookText : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (args.bookString!=null){
+            bookText = args.bookString!!
+        }
+        else println("Value is null..")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentBookShelfBinding.inflate(inflater, container, false)
+        _binding = FragmentReaderBinding.inflate(inflater, container, false)
+
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.search.setOnClickListener {
 
-
-        }
-
-
+        loadBooks(bookText)
     }
 
-
-    fun seacrhBook(){
+    @OptIn(DelicateCoroutinesApi::class)
+    fun loadBooks(bookURL: String) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val url = URL("https://www.gutenberg.org/cache/epub/84/pg84.txt")
+                val url = URL(bookURL)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
                 connection.connect()
 
                 val responseCode = connection.responseCode
+
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     val reader = BufferedReader(InputStreamReader(connection.inputStream))
                     val response = StringBuilder()
@@ -72,8 +81,14 @@ class BookShelf : Fragment() {
                         val data = response.toString()
 
                         println("Books:$data")
-
-
+                        binding.bookText.text = data
+                    }
+                } else if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+                    // Handle redirection
+                    val newUrl = connection.getHeaderField("Location")
+                    if (newUrl != null) {
+                        // Recursive call with the new URL
+                        loadBooks(newUrl)
                     }
                 } else {
                     println("HTTP Request Failed. Response Code: $responseCode")
@@ -85,4 +100,5 @@ class BookShelf : Fragment() {
             }
         }
     }
+
 }

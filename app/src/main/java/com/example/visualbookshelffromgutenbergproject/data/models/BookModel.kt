@@ -1,7 +1,7 @@
 package com.example.visualbookshelffromgutenbergproject.data.models
 
-import com.google.gson.annotations.SerializedName
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -38,7 +38,9 @@ data class BookModel(
         @SerializedName("text/html; charset=iso-8859-1")
         val text_html_charsetiso_8859_1: String?,
         @SerializedName("audio/mpeg")
-        val audio_mpeg: String?
+        val audio_mpeg: String?,
+        @SerializedName("text/plain")
+        val text_plain:String?
     ): Parcelable
 
     @Parcelize
@@ -46,7 +48,7 @@ data class BookModel(
         val id: Int?,
         val title: String?,
         val authors: ArrayList<Author>?,
-        val translators: ArrayList<String>?,
+        val translators: ArrayList<Translator>?,
         val subjects: ArrayList<String>?,
         val bookshelves: ArrayList<String>?,
         val languages: ArrayList<String>?,
@@ -55,4 +57,11 @@ data class BookModel(
         val formats: Formats?,
         val download_count: Int?
     ): Parcelable
+
+    @Parcelize
+    class Translator (
+        var name: String? = null,
+        var birth_year: Int = 0,
+        var death_year: Int? = null
+    ):Parcelable
 }
