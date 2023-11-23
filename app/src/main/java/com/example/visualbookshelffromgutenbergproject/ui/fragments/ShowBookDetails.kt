@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -75,17 +76,13 @@ class ShowBookDetails : Fragment() {
         val genre = if (selectedId.bookshelves?.isNotEmpty() == true) selectedId.bookshelves!!.get(0) else "Unknown Genre"
         val language = if (selectedId.languages!![0].isNotEmpty()) selectedId.languages!![0] else "Unknown Language"
         val textPlain = selectedId.formats?.text_plain_charsetus_ascii ?: "Unknown Language"
-
+        val id = selectedId.id
 
         binding.titleTextView.text = "Title: $title"
         binding.authorTextView.text = "Author: $author"
         binding.genreTextView.text = "Genre: $genre"
         binding.languageTextView.text = "Language: $language"
 
-
-       /* viewModel.allBooks.observe(viewLifecycleOwner) { books ->
-            //updateUI(books)
-        }*/
 
         binding.favoriteButton.setOnClickListener {
             val newBook = Book(
@@ -94,7 +91,9 @@ class ShowBookDetails : Fragment() {
                 author = author.toString(),
                 genre = genre.toString(),
                 copyright = true,
-                text_plain_charsetus_ascii = textPlain
+                text_plain_charsetus_ascii = textPlain,
+                bookId = id,
+                lastPoint = 0
             )
 
             viewModel.insertOrUpdate(newBook)
@@ -102,6 +101,8 @@ class ShowBookDetails : Fragment() {
             val action = ShowBookDetailsDirections.actionShowBookDetailsToSearchBook2()
             findNavController().navigate(action)
             findNavController().popBackStack(R.id.SearchBookFragment, false)
+
+            Toast.makeText(requireContext(),"$title is added your library.",Toast.LENGTH_SHORT).show()
         }
     }
 }

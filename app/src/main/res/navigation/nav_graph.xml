@@ -42,9 +42,8 @@
         android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.Reader"
         android:label="fragment_reader"
         tools:layout="@layout/fragment_reader" >
-        <argument android:name="bookString"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
+        <argument
+            android:name="bookURL"
+            app:argType="string" />
     </fragment>
 </navigation>

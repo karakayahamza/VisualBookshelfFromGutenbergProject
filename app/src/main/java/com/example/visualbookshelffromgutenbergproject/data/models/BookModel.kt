@@ -35,12 +35,15 @@ data class BookModel(
         val application_octet_stream: String?,
         @SerializedName("text/html")
         val text_html: String?,
-        @SerializedName("text/html; charset=iso-8859-1")
+        @SerializedName("text/plain; charset=iso-8859-1")
         val text_html_charsetiso_8859_1: String?,
         @SerializedName("audio/mpeg")
         val audio_mpeg: String?,
         @SerializedName("text/plain")
-        val text_plain:String?
+        val text_plain:String?,
+        @SerializedName("text/plain; charset=utf-8")
+        val text_plain_charset_utf8 : String?,
+
     ): Parcelable
 
     @Parcelize

@@ -46,7 +46,9 @@ class SearchBook : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.search.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             viewModel.viewModelScope.cancel()
             bookList.clear()
             getData(binding.searchBook.text.toString())
@@ -67,6 +69,12 @@ class SearchBook : Fragment() {
                     val copyright = i.copyright
                     val image = i.formats?.image_jpeg
                     val plainText = i.formats?.text_plain
+                    val text_plain_charset_utf8 = i.formats?.text_plain_charset_utf8
+                    val text_html_charsetiso_8859_1 = i.formats?.text_html_charsetiso_8859_1
+                    val text_plain_charsetus_ascii = i.formats?.text_plain_charsetus_ascii
+
+                    val result = text_html_charsetiso_8859_1 ?: text_plain_charset_utf8 ?: plainText ?:  text_plain_charsetus_ascii
+
 
                     val book = Book(
                         imageResource = image,
@@ -74,7 +82,9 @@ class SearchBook : Fragment() {
                         author = author.toString(),
                         genre = genre,
                         copyright = copyright,
-                        text_plain_charsetus_ascii = plainText.toString()
+                        text_plain_charsetus_ascii = result.toString(),
+                        bookId = i.id,
+                        lastPoint = 0
                     )
 
                     addBook(book)
@@ -100,9 +110,10 @@ class SearchBook : Fragment() {
                 val action = SearchBookDirections.actionSearchBook2ToShowBookDetails(bookRes)
                 findNavController().navigate(action)
 
-                Toast.makeText(requireContext(),bookList[position].author,Toast.LENGTH_LONG).show()
             }
         })
+
+        binding.progressBar.visibility = View.INVISIBLE
     }
 
     private fun addBook(book: Book) {

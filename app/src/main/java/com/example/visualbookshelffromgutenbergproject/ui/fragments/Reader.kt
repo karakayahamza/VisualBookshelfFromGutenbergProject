@@ -5,11 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.example.visualbookshelffromgutenbergproject.R
-import com.example.visualbookshelffromgutenbergproject.data.models.Book
-import com.example.visualbookshelffromgutenbergproject.databinding.FragmentBookLibraryBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.example.visualbookshelffromgutenbergproject.LoadBookData
 import com.example.visualbookshelffromgutenbergproject.databinding.FragmentReaderBinding
 import com.example.visualbookshelffromgutenbergproject.viewmodel.BookLocalViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -27,15 +25,15 @@ class Reader : Fragment() {
     private var _binding: FragmentReaderBinding? = null
     private val binding get() = _binding!!
     val args: ReaderArgs by navArgs()
-    private lateinit var bookText : String
+    private var bookURL : String =""
+    private lateinit var viewModel: BookLocalViewModel
+    private lateinit var loadBookData: LoadBookData
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (args.bookString!=null){
-            bookText = args.bookString!!
-        }
-        else println("Value is null..")
+        bookURL = args.bookURL
     }
 
     override fun onCreateView(
@@ -44,18 +42,35 @@ class Reader : Fragment() {
     ): View {
         _binding = FragmentReaderBinding.inflate(inflater, container, false)
 
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //loadBooks(bookID)
 
-        loadBooks(bookText)
+        //val fetchTextTask = LoadBookData()
+        //fetchTextTask.execute("https://www.gutenberg.org/files/$bookID/$bookID.txt")
+
+
+        loadBookData = LoadBookData(binding.bookText)
+        loadBookData.execute(bookURL)
+
+
+
+        //loadBookData.execute("https://www.gutenberg.org/cache/epub/$bookID/pg$bookID-images.html")
+
+
     }
+    /*@OptIn(DelicateCoroutinesApi::class)
+    fun loadBooks(bookURL: Int) {
+        println("Book url : $bookURL")
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun loadBooks(bookURL: String) {
+        val bookURL = "https://www.gutenberg.org/files/$bookID/$bookID.txt"
+
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val url = URL(bookURL)
@@ -99,6 +114,6 @@ class Reader : Fragment() {
                 e.printStackTrace()
             }
         }
-    }
+    }*/
 
 }

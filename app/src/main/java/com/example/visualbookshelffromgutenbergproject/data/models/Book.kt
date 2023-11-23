@@ -13,5 +13,7 @@ data class Book(
     val author: String,
     val genre: String,
     val copyright: Boolean?,
-    val text_plain_charsetus_ascii :String?
+    val text_plain_charsetus_ascii :String?,
+    val bookId : Int?,
+    val lastPoint : Int?
 )
