@@ -73,7 +73,9 @@ class SearchBook : Fragment() {
                     val text_html_charsetiso_8859_1 = i.formats?.text_html_charsetiso_8859_1
                     val text_plain_charsetus_ascii = i.formats?.text_plain_charsetus_ascii
 
-                    val result = text_html_charsetiso_8859_1 ?: text_plain_charset_utf8 ?: plainText ?:  text_plain_charsetus_ascii
+                    //val result = text_html_charsetiso_8859_1 ?: text_plain_charset_utf8 ?: plainText ?:  text_plain_charsetus_ascii
+
+                    val newURL = "http://www.gutenberg.org/cache/epub/${i.id}/pg${i.id}.txt"
 
 
                     val book = Book(
@@ -82,7 +84,7 @@ class SearchBook : Fragment() {
                         author = author.toString(),
                         genre = genre,
                         copyright = copyright,
-                        text_plain_charsetus_ascii = result.toString(),
+                        text_plain_charsetus_ascii = newURL,
                         bookId = i.id,
                         lastPoint = 0
                     )
@@ -100,7 +102,6 @@ class SearchBook : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         bookAdapter = BookAdapter(bookList)
         recyclerView.adapter = bookAdapter
-
 
 
         bookAdapter.setOnItemClickListener(object : ItemClickListener {

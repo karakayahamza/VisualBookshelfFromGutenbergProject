@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,16 +17,6 @@ import com.example.visualbookshelffromgutenbergproject.data.models.BookModel.Res
 import com.example.visualbookshelffromgutenbergproject.databinding.FragmentShowBookDetailsBinding
 import com.example.visualbookshelffromgutenbergproject.viewmodel.BookLocalViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
-import java.io.PrintWriter
-import java.net.HttpURLConnection
-import java.net.URL
 
 class ShowBookDetails : Fragment() {
     val args: ShowBookDetailsArgs by navArgs()
@@ -41,7 +30,7 @@ class ShowBookDetails : Fragment() {
         super.onCreate(savedInstanceState)
 
         if (args.framentkey==null){
-            println("NULL")
+            println("Hello")
         }
         selectedId = args.framentkey
 
@@ -83,6 +72,7 @@ class ShowBookDetails : Fragment() {
         binding.genreTextView.text = "Genre: $genre"
         binding.languageTextView.text = "Language: $language"
 
+        val newURL = "http://www.gutenberg.org/cache/epub/${id}/pg${id}.txt"
 
         binding.favoriteButton.setOnClickListener {
             val newBook = Book(
@@ -91,7 +81,7 @@ class ShowBookDetails : Fragment() {
                 author = author.toString(),
                 genre = genre.toString(),
                 copyright = true,
-                text_plain_charsetus_ascii = textPlain,
+                text_plain_charsetus_ascii = newURL,
                 bookId = id,
                 lastPoint = 0
             )

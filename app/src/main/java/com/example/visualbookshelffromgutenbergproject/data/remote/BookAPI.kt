@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BookAPI {
-    @GET("books/?")
+    @GET("books/?&mime_type=text%2Fhtml")
     suspend fun getData(@Query("search") name: String?): BookModel
 }

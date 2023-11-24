@@ -1,11 +1,11 @@
 package com.example.visualbookshelffromgutenbergproject
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.visualbookshelffromgutenbergproject.databinding.ActivityMainBinding
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.example.visualbookshelffromgutenbergproject.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -32,5 +32,11 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavView)
 
         setupWithNavController(bottomNavigationView,navController)
-}
+        
+
+
+
+    }
+
+
 }

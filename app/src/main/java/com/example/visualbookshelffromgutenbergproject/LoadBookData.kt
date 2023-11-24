@@ -42,14 +42,15 @@ class LoadBookData(private val textView: TextView) : AsyncTask<String, Void, Str
     override fun onPostExecute(result: String?) {
         val formattedText = formatText(result)
         textView.text = formattedText
+
+        //println("formattedText: $formattedText  Result : $result")
     }
 
     private fun formatText(text: String?): String {
         // Burada metni istediğiniz gibi biçimlendirebilirsiniz.
         // Örneğin, "\n" karakterleri ile bölerek yeni satırlar ekleyebilirsiniz.
         // Bu kısımda metni nasıl biçimlendirmek istediğinize göre uygun işlemleri gerçekleştirin.
-        println(text)
-
         return text?.replace("\n\n", "\n").orEmpty()
     }
 }
+
