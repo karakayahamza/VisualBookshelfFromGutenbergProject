@@ -10,9 +10,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
+        maven("https://jitpack.io")
     }
 }
 
 rootProject.name = "Visual Bookshelf from Gutenberg Project"
 include(":app")
- 

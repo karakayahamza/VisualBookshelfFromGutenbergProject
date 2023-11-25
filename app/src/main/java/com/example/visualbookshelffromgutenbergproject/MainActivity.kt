@@ -6,8 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.visualbookshelffromgutenbergproject.databinding.ActivityMainBinding
+import com.folioreader.FolioReader
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavView)
 
         setupWithNavController(bottomNavigationView,navController)
-        
+
+        val folioReader: FolioReader = FolioReader.get()
 
 
 

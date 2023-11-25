@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.example.visualbookshelffromgutenbergproject"
         minSdk = 27
-        targetSdk = 34
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -76,5 +76,7 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
+
+    implementation ("com.folioreader:folioreader:0.5.3")
 
 }
