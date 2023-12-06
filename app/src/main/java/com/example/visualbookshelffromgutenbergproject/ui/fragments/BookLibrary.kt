@@ -56,9 +56,8 @@ class BookLibrary : Fragment() {
 
         bookAdapter.setOnItemClickListener(object : ItemClickListener {
             override fun onItemClickListener(position: Int) {
-                val bookID = bookList[position].text_plain_charsetus_ascii
-                println("----------------------------"+bookID)
-                val action = BookLibraryDirections.actionBookLibraryToReader(bookID!!)
+                val bookID = bookList[position].id
+                val action = BookLibraryDirections.actionBookLibraryToReader(bookID)
                 findNavController().navigate(action)
             }
         })

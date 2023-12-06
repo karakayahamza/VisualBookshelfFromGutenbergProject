@@ -44,6 +44,6 @@
         tools:layout="@layout/fragment_reader" >
         <argument
             android:name="bookURL"
-            app:argType="string" />
+            app:argType="long" />
     </fragment>
 </navigation>

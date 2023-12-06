@@ -1,5 +1,6 @@
 package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
+import LoadBookData
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -88,6 +89,22 @@ class SearchBook : Fragment() {
                         bookId = i.id,
                         lastPoint = 0
                     )
+
+
+                    // Kullanım
+                    val loadBookData = LoadBookData(requireContext())
+                    val url = "https://www.gutenberg.org/cache/epub/84/pg84-images.html"
+
+// Veriyi almak için get metodu kullanılır (Bu metot, UI thread'inde kullanılmamalıdır)
+                    val result: String? = loadBookData.execute(url).get()
+
+// result değişkeninde şimdi veriyi bulabilirsiniz
+                    if (result != null) {
+                        // Veriyi kullanabilirsiniz
+                    } else {
+                        // Hata durumu veya veri alınamadı durumu
+                    }
+
 
                     addBook(book)
                 }

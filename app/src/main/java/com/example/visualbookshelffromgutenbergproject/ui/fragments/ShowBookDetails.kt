@@ -1,5 +1,6 @@
 package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
+import LoadBookData
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -30,7 +31,7 @@ class ShowBookDetails : Fragment() {
         super.onCreate(savedInstanceState)
 
         if (args.framentkey==null){
-            println("Hello")
+            Toast.makeText(requireContext(),"We encountered an error",Toast.LENGTH_SHORT).show()
         }
         selectedId = args.framentkey
 
@@ -72,7 +73,14 @@ class ShowBookDetails : Fragment() {
         binding.genreTextView.text = "Genre: $genre"
         binding.languageTextView.text = "Language: $language"
 
-        val newURL = "http://www.gutenberg.org/cache/epub/${id}/pg${id}.txt"
+        val newURL ="https://www.gutenberg.org/cache/epub/${selectedId.id}/pg${selectedId.id}-images.html"
+
+        val loadBookData = LoadBookData(requireContext())
+        val result: String? = loadBookData.execute(newURL).get()
+
+
+
+
 
         binding.favoriteButton.setOnClickListener {
             val newBook = Book(
@@ -81,7 +89,7 @@ class ShowBookDetails : Fragment() {
                 author = author.toString(),
                 genre = genre.toString(),
                 copyright = true,
-                text_plain_charsetus_ascii = newURL,
+                text_plain_charsetus_ascii = result ?: "Unknown",
                 bookId = id,
                 lastPoint = 0
             )

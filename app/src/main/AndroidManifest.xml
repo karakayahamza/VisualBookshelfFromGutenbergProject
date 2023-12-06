@@ -20,13 +20,6 @@
             android:name=".MainActivity"
             android:exported="true">
 
-            <meta-data
-                android:name="folio_book_path"
-                android:value="" />
-            <meta-data
-                android:name="folio_is_new"
-                android:value="false" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

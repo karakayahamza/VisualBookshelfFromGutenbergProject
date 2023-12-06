@@ -77,6 +77,4 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
 
-    implementation ("com.folioreader:folioreader:0.5.3")
-
 }
