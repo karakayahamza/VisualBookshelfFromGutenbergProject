@@ -1,10 +1,11 @@
 package com.example.visualbookshelffromgutenbergproject.viewmodel
 
+import android.R.attr.data
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.visualbookshelffromgutenbergproject.data.remote.BookAPI
 import com.example.visualbookshelffromgutenbergproject.data.models.BookModel
+import com.example.visualbookshelffromgutenbergproject.data.remote.BookAPI
 import com.example.visualbookshelffromgutenbergproject.data.remote.repository.BookRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 
 class BookViewModel: ViewModel() {
     private val bookRepository: BookRepository
@@ -57,6 +59,10 @@ class BookViewModel: ViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
+    }
+
+    fun clearData() {
+        books.value = null
     }
 
 }
