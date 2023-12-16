@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
-
+    implementation ("com.squareup.picasso:picasso:2.8")
 
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
@@ -76,5 +76,7 @@ dependencies {
 
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
+
+    implementation ("org.jsoup:jsoup:1.14.3")
 
 }

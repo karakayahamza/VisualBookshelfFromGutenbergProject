@@ -1,6 +1,7 @@
 package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
 import LoadBookData
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,13 +46,21 @@ class SearchBook : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        recyclerView = binding.searchRecyclerview
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        bookAdapter = BookAdapter(mutableListOf())
+
+
         binding.search.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
-            viewModel.viewModelScope.cancel()
+            //viewModel.viewModelScope.cancel()
+            viewModel.clearData()
             bookList.clear()
+            bookAdapter.notifyDataSetChanged()
             getData(binding.searchBook.text.toString())
         }
     }
@@ -68,15 +77,14 @@ class SearchBook : Fragment() {
                     val title = i.title
                     val genre = if (i.bookshelves?.isNotEmpty() == true) i.bookshelves.get(0) else "Unknown Genre"
                     val copyright = i.copyright
-                    val image = i.formats?.image_jpeg
-                    val plainText = i.formats?.text_plain
-                    val text_plain_charset_utf8 = i.formats?.text_plain_charset_utf8
-                    val text_html_charsetiso_8859_1 = i.formats?.text_html_charsetiso_8859_1
-                    val text_plain_charsetus_ascii = i.formats?.text_plain_charsetus_ascii
+                    val image =i.formats?.image_jpeg
 
-                    //val result = text_html_charsetiso_8859_1 ?: text_plain_charset_utf8 ?: plainText ?:  text_plain_charsetus_ascii
+                                //
+                   //
+                    //val ssds = i.formats?.image_jpeg
+                    val bookContent = i.formats?.text_html
 
-                    val newURL = "http://www.gutenberg.org/cache/epub/${i.id}/pg${i.id}.txt"
+                    //val newURL = "http://www.gutenberg.org/cache/epub/${i.id}/pg${i.id}.txt"
 
 
                     val book = Book(
@@ -85,27 +93,10 @@ class SearchBook : Fragment() {
                         author = author.toString(),
                         genre = genre,
                         copyright = copyright,
-                        text_plain_charsetus_ascii = newURL,
+                        text_plain_charsetus_ascii = bookContent,
                         bookId = i.id,
                         lastPoint = 0
                     )
-
-
-                    // Kullanım
-                    val loadBookData = LoadBookData(requireContext())
-                    val url = "https://www.gutenberg.org/cache/epub/84/pg84-images.html"
-
-// Veriyi almak için get metodu kullanılır (Bu metot, UI thread'inde kullanılmamalıdır)
-                    val result: String? = loadBookData.execute(url).get()
-
-// result değişkeninde şimdi veriyi bulabilirsiniz
-                    if (result != null) {
-                        // Veriyi kullanabilirsiniz
-                    } else {
-                        // Hata durumu veya veri alınamadı durumu
-                    }
-
-
                     addBook(book)
                 }
                 setRecyclerView(it)
@@ -123,11 +114,9 @@ class SearchBook : Fragment() {
 
         bookAdapter.setOnItemClickListener(object : ItemClickListener {
             override fun onItemClickListener(position: Int) {
-
                 val bookRes = bookModel.results[position]
                 val action = SearchBookDirections.actionSearchBook2ToShowBookDetails(bookRes)
                 findNavController().navigate(action)
-
             }
         })
 

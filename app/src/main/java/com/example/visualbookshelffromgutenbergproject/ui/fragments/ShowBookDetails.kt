@@ -2,6 +2,7 @@ package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
 import LoadBookData
 import android.annotation.SuppressLint
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -18,6 +20,10 @@ import com.example.visualbookshelffromgutenbergproject.data.models.BookModel.Res
 import com.example.visualbookshelffromgutenbergproject.databinding.FragmentShowBookDetailsBinding
 import com.example.visualbookshelffromgutenbergproject.viewmodel.BookLocalViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ShowBookDetails : Fragment() {
     val args: ShowBookDetailsArgs by navArgs()
@@ -66,6 +72,9 @@ class ShowBookDetails : Fragment() {
         val genre = if (selectedId.bookshelves?.isNotEmpty() == true) selectedId.bookshelves!!.get(0) else "Unknown Genre"
         val language = if (selectedId.languages!![0].isNotEmpty()) selectedId.languages!![0] else "Unknown Language"
         val textPlain = selectedId.formats?.text_plain_charsetus_ascii ?: "Unknown Language"
+       // val bookContent = selectedId.formats?.text_html
+        val bookContent = "https://www.gutenberg.org/cache/epub/${selectedId.id}/pg${selectedId.id}-images.html"
+
         val id = selectedId.id
 
         binding.titleTextView.text = "Title: $title"
@@ -73,34 +82,41 @@ class ShowBookDetails : Fragment() {
         binding.genreTextView.text = "Genre: $genre"
         binding.languageTextView.text = "Language: $language"
 
-        val newURL ="https://www.gutenberg.org/cache/epub/${selectedId.id}/pg${selectedId.id}-images.html"
-
-        val loadBookData = LoadBookData(requireContext())
-        val result: String? = loadBookData.execute(newURL).get()
-
-
-
-
 
         binding.favoriteButton.setOnClickListener {
-            val newBook = Book(
-                imageResource = selectedId.formats?.image_jpeg,
-                title = title.toString(),
-                author = author.toString(),
-                genre = genre.toString(),
-                copyright = true,
-                text_plain_charsetus_ascii = result ?: "Unknown",
-                bookId = id,
-                lastPoint = 0
-            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                binding.progressBar.visibility = View.VISIBLE
 
-            viewModel.insertOrUpdate(newBook)
+                try {
+                    val result = withContext(Dispatchers.IO) {
+                        val loadBookData = LoadBookData(requireContext())
+                        loadBookData.execute(bookContent).get()
+                    }
 
-            val action = ShowBookDetailsDirections.actionShowBookDetailsToSearchBook2()
-            findNavController().navigate(action)
-            findNavController().popBackStack(R.id.SearchBookFragment, false)
+                    val newBook = Book(
+                        imageResource = selectedId.formats?.image_jpeg,
+                        title = title.toString(),
+                        author = author.toString(),
+                        genre = genre,
+                        copyright = true,
+                        text_plain_charsetus_ascii = result ?: "Unknown",
+                        bookId = id,
+                        lastPoint = 0
+                    )
 
-            Toast.makeText(requireContext(),"$title is added your library.",Toast.LENGTH_SHORT).show()
+                    viewModel.insertOrUpdate(newBook)
+
+                    val action = ShowBookDetailsDirections.actionShowBookDetailsToSearchBook2()
+                    findNavController().navigate(action)
+                    findNavController().popBackStack(R.id.SearchBookFragment, false)
+
+                    Toast.makeText(requireContext(), "$title is added to your library.", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    // Hata durumlarına karşı uygun işlemleri ekleyin
+                } finally {
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
         }
     }
 }

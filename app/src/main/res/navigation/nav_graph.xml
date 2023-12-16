@@ -44,6 +44,9 @@
         tools:layout="@layout/fragment_reader" >
         <argument
             android:name="bookURL"
-            app:argType="long" />
+            app:argType="integer" />
+        <argument
+            android:name="realbooid"
+            app:argType="integer" />
     </fragment>
 </navigation>
