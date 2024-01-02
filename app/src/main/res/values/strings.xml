@@ -12,4 +12,15 @@
     <string name="author_name">Author Name :</string>
     <string name="publisher_name">Publisher Name</string>
     <string name="best_seller_book">BEST SELLER BOOK</string>
+    <string name="about_project_gutenberg">
+        <b><font color="#FF4081">About Project Gutenberg</font></b>
+        \n
+        Project Gutenberg is an online library of free eBooks. It was the first provider of free electronic books, or eBooks. Michael Hart, the founder of Project Gutenberg, invented eBooks in 1971, and his memory continues to inspire the creation of eBooks and related content today.
+        \n\n
+        <b><font color="#FF4081">Project Gutenberg Mission Statement</font></b>
+        \n
+        To encourage the creation and distribution of eBooks.
+        \n\n
+        A 2004 essay by Michael Hart provides more detail on the mission statement, and some of the beliefs that guide Project Gutenberg’s activities in fulfillment of that mission.
+    </string>
 </resources>

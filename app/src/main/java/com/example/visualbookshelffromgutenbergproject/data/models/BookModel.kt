@@ -14,9 +14,7 @@ data class BookModel(
 
     @Parcelize
     data class Author(
-        val name: String?,
-        val birth_year: Int?,
-        val death_year: Int?
+        val name: String?
     ): Parcelable
 
     @Parcelize
@@ -30,7 +28,7 @@ data class BookModel(
         @SerializedName("application/rdf+xml")
         val application_rdf_xml: String?,
         @SerializedName("text/plain; charset=us-ascii")
-        val text_plain_charsetus_ascii: String?,
+        val textPlainCharsetusAscii: String?,
         @SerializedName("application/octet-stream")
         val application_octet_stream: String?,
         @SerializedName("text/html")

@@ -1,6 +1,6 @@
 package com.example.visualbookshelffromgutenbergproject.viewmodel
 
-import android.R.attr.data
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ class BookViewModel: ViewModel() {
     private val bookRepository: BookRepository
 
     val books = MutableLiveData<BookModel?>()
-    val error = MutableLiveData<Boolean?>()
+    val error = MutableLiveData<String?>()
 
     init {
         val retrofit = Retrofit.Builder()
@@ -32,6 +32,7 @@ class BookViewModel: ViewModel() {
     }
 
     fun loadData(name: String) {
+        Log.d("SearchBookViewModel", "loadData is called") // Log eklemesi
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val bookModel = bookRepository.getData(name)
@@ -46,14 +47,13 @@ class BookViewModel: ViewModel() {
         }
     }
 
-    private fun handleResults(bookModel: BookModel) {
-        books.value = bookModel
-        error.value = false
+    private fun handleError(throwable: Throwable) {
+        error.value = "An error occurred: ${throwable.message}"
+        println("$throwable")
     }
 
-    private fun handleError(throwable: Throwable) {
-        error.value = true
-        println("$throwable")
+    private fun handleResults(bookModel: BookModel) {
+        books.value = bookModel
     }
 
     override fun onCleared() {

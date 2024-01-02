@@ -8,15 +8,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.visualbookshelffromgutenbergproject.data.models.Book
-import com.example.visualbookshelffromgutenbergproject.utils.ItemClickListener
-import com.example.visualbookshelffromgutenbergproject.R
 import com.example.visualbookshelffromgutenbergproject.databinding.BookItemBinding
+import com.example.visualbookshelffromgutenbergproject.utils.ItemClickListener
+import com.example.visualbookshelffromgutenbergproject.utils.ItemLongClickListener
 
 class BookAdapter(private val bookList: MutableList<Book>) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
     private var itemClickListener: ItemClickListener? = null
+    private var itemLongClickListener: ItemLongClickListener? = null
 
     fun setOnItemClickListener(listener: ItemClickListener) {
         itemClickListener = listener
+    }
+    fun setOnItemLongClickListener(listener: ItemLongClickListener) {
+        itemLongClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
@@ -35,7 +39,7 @@ class BookAdapter(private val bookList: MutableList<Book>) : RecyclerView.Adapte
     }
 
     inner class BookViewHolder(binding: BookItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val bookImageView: ImageView = binding.bookImageView
+        private val bookImageView: ImageView =    binding.bookImageView
         private val bookTitleTextView: TextView = binding.textViewTitle
         private val bookAuthorTextView: TextView = binding.textViewAuthor
         private val bookGenreTextView: TextView = binding.genre
@@ -51,7 +55,19 @@ class BookAdapter(private val bookList: MutableList<Book>) : RecyclerView.Adapte
                 }
             }
 
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+
+                if (position != RecyclerView.NO_POSITION) {
+                    itemLongClickListener?.onItemLongClickListener(position)
+                }
+
+                // Return true to indicate that the long click event has been consumed
+                true
+            }
+
         }
+
 
 
         @SuppressLint("SetTextI18n")

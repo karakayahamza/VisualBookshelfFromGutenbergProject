@@ -3,15 +3,15 @@
 
     <item
         android:id="@+id/searchBook2"
-        android:icon="@drawable/search_selector"
+        android:icon="@drawable/search_out"
         android:title="" />
     <item
         android:id="@+id/bookLibrary"
         android:title=""
-        android:icon="@drawable/library_selector"/>
+        android:icon="@drawable/lib_in"/>
 
     <item
-        android:id="@+id/bookShelf2"
+        android:id="@+id/settingsFragment"
         android:title=""
-        android:icon="@drawable/settings_selector"/>
+        android:icon="@drawable/settings_out"/>
 </menu>

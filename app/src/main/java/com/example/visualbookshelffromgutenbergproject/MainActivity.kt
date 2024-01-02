@@ -1,6 +1,7 @@
 package com.example.visualbookshelffromgutenbergproject
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,24 +18,20 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        /*binding.save.setOnClickListener {
-            val currentScrollPosition = binding.scrollView.scrollY
-            saveLastReadScrollY(currentScrollPosition)
-        }
-        //println(sharedPreferences.getInt("lastReadScrollY",0))
-
-        sharedPreferences = getSharedPreferences("ReadingPreferences", Context.MODE_PRIVATE)
-*/
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavView)
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.reader) {
+
+                bottomNavigationView.visibility = View.GONE
+            } else {
+
+                bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
+
         setupWithNavController(bottomNavigationView,navController)
-
-
-
     }
-
-
 }

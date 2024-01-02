@@ -20,13 +20,14 @@
         android:label="ShowBookDetails"
         tools:layout="@layout/fragment_show_book_details"
         >
+
+        <action
+            android:id="@+id/action_showBookDetails_to_searchBook2"
+            app:destination="@id/searchBook2" />
         <argument
             android:name="framentkey"
             app:argType="com.example.visualbookshelffromgutenbergproject.data.models.BookModel$Result"
             />
-        <action
-            android:id="@+id/action_showBookDetails_to_searchBook2"
-            app:destination="@id/searchBook2" />
     </fragment>
     <fragment
         android:id="@+id/bookLibrary"
@@ -49,4 +50,9 @@
             android:name="realbooid"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.visualbookshelffromgutenbergproject.ui.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

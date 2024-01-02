@@ -3,7 +3,6 @@ package com.example.visualbookshelffromgutenbergproject.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
 @Entity(tableName = "books")
 data class Book(
     @PrimaryKey(autoGenerate = true)
@@ -13,7 +12,7 @@ data class Book(
     val author: String,
     val genre: String,
     val copyright: Boolean?,
-    val text_plain_charsetus_ascii :String?,
+    val textPlainCharsetusAscii :String?,
     val bookId : Int?,
     val lastPoint : Int?
 )

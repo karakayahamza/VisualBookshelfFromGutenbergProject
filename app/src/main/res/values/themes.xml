@@ -1,13 +1,47 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+
+
+
+    <!-- res/values/styles.xml -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Renkler -->
+        <item name="colorPrimary">#FF4081</item>
+        <item name="colorPrimaryDark">#FF4081</item>
+        <item name="colorAccent">#FF4081</item>
+        <item name="colorControlNormal">#FF8C00</item>
+        <item name="colorControlHighlight">#FF0025</item>
+        <item name="colorControlActivated">#FF4081</item>
+        <item name="colorButtonNormal">@color/white</item>
+
+        <!-- Toolbar rengi -->
+        <item name="android:colorBackground">@color/colorPrimary</item>
+
+        <!-- Text renkleri -->
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="bottomNavigationStyle">@style/BottomNavigationView</item>
+        <item name="textInputStyle">@style/MyTextInputLayout</item>
+
     </style>
 
+
+    <style name="MyTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/main_color</item>
+    </style>
+
+
+    <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="BottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/main_color</item>
+    </style>
 
 </resources>

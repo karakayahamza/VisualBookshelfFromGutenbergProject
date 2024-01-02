@@ -1,39 +1,41 @@
 package com.example.visualbookshelffromgutenbergproject.ui.fragments
 
-import LoadBookData
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.example.visualbookshelffromgutenbergproject.data.models.Book
 import com.example.visualbookshelffromgutenbergproject.databinding.FragmentReaderBinding
 import com.example.visualbookshelffromgutenbergproject.viewmodel.BookLocalViewModel
-import com.example.visualbookshelffromgutenbergproject.viewmodel.BookViewModel
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-
 
 class Reader : Fragment() {
 
     private var _binding: FragmentReaderBinding? = null
     private val binding get() = _binding!!
-    val args: ReaderArgs by navArgs()
-    private var bookURL : Int =0
-    private var arg2Value : Int = 0
-    private lateinit var loadBookData: LoadBookData
+    private val args: ReaderArgs by navArgs()
+    private var bookURL: Int = 0
+    private var arg2Value: Int = 0
     private lateinit var viewModel: BookLocalViewModel
+    private lateinit var webView: WebView
+    private lateinit var sharedPreferences: SharedPreferences
+    private var isDarkMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        bookURL = args.bookURL
-        arg2Value = args.realbooid
+        retrieveArguments()
+        sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
@@ -42,42 +44,153 @@ class Reader : Fragment() {
     ): View {
         _binding = FragmentReaderBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[BookLocalViewModel::class.java]
+
+        isDarkMode = sharedPreferences.getBoolean(KEY_DARK_MODE, false)
+
         return binding.root
     }
-//--------------------------------------------------------------------------------------
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var content: String = ""
 
-            viewModel.allBooks.observe(viewLifecycleOwner, Observer {
-                //https://www.gutenberg.org/ebooks/345.html.images
+        viewModel.allBooks.observe(viewLifecycleOwner) { books ->
+            val targetBook = books.find { it.bookId == arg2Value }
 
-                //https://www.gutenberg.org/cache/epub/5921/pg5921-images.html
-                //https://www.gutenberg.org/cache/epub/5921/pg5921-images.html
+            targetBook?.let {
+                logBookDetails(it)
+                content = it.textPlainCharsetusAscii.toString()
+            } ?: showError()
 
-                //println("Url den gelen veri : ${it[bookURL-1].text_plain_charsetus_ascii.toString()}")
+            setUpWebView()
+            loadData(content)
+            restoreScrollPosition(arg2Value) // Pass the bookId for scroll restoration
+        }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        saveScrollPositionToSharedPreferences(arg2Value)
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
+    private fun retrieveArguments() {
+        args.apply {
+            this@Reader.bookURL = this.bookURL
+            arg2Value = this.realbooid
+        }
+    }
 
-                val htmlString = "https://www.gutenberg.org/cache/epub/${arg2Value}/pg${arg2Value}-images.html"
+    private fun logBookDetails(book: Book) {
+        Log.d("Book Details", "${book.title} : ${book.author}")
+    }
 
-                val data = it[bookURL-1].text_plain_charsetus_ascii.toString()
+    private fun showError() {
+        Toast.makeText(requireContext(), "Something went wrong! Try again.", Toast.LENGTH_SHORT).show()
+    }
 
-                val document: Document = Jsoup.parse(data)
-                val paragraphElements = document.select("p")
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setUpWebView() {
+        webView = binding.myWebView
+        val webSettings: WebSettings = webView.settings
 
-                // Her <p> etiketi içindeki metni al ve boş bir satır ekleyerek birleştir
-                val finalText = paragraphElements.joinToString("\n\n") { it.text() }
+        with(webSettings) {
+            javaScriptEnabled = true
+            allowFileAccess = true
+            allowUniversalAccessFromFileURLs = true
+            setSupportZoom(false)
+            builtInZoomControls = false
+            webSettings.displayZoomControls = false
+        }
 
-                binding.myTextView.text=finalText
+        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                val alignBodyContentToLeft = """
+                        |(function() {
+                        |    var bodyElement = document.querySelector('body');
+                        |    if (bodyElement) {
+                        |        bodyElement.style.textAlign = 'left';
+                        |        bodyElement.style.padding = '0';
+                        |        bodyElement.style.margin = '0';
+                        |    }
+                        |})();
+                    """.trimMargin()
 
-/*
-                binding.myWebView.loadDataWithBaseURL(null, it[bookURL-1].text_plain_charsetus_ascii.toString(), "text/html", "UTF-8", null)
+                webView.evaluateJavascript(alignBodyContentToLeft, null)
+                applyDarkMode(isDarkMode)
+            }
+        }
+    }
 
-                // İsteğe bağlı olarak WebSettings konfigürasyonları yapabilirsiniz
-                val webSettings: WebSettings = binding.myWebView.settings
-                webSettings.javaScriptEnabled = true*/
-            })
+    fun removeImages(html: String): String {
+        val document = Jsoup.parse(html)
+
+        // Remove image tags
+        document.select("img").remove()
+
+        // Get the cleaned HTML content
+        val cleanedHtml = document.html()
+
+        return cleanedHtml
+    }
+
+    private fun loadData(data: String) {
+        activity?.runOnUiThread {
+            if (data.isNotEmpty()) {
+                // Extract and remove styling from the body in HTML content
+                val modifiedHtmlContent = removeImages(data)
+
+                // Load the modified HTML content into WebView
+                webView.loadDataWithBaseURL(null, modifiedHtmlContent, "text/html", "UTF-8", null)
+
+            }
+        }
+    }
+
+    private fun saveScrollPositionToSharedPreferences(bookId: Int) {
+        val scrollPosition = webView.scrollY
+        Log.d("Scroll Y", scrollPosition.toString())
+        val sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putInt("scroll_position_$bookId", scrollPosition)
+            apply()
+        }
+    }
+
+    private fun restoreScrollPosition(bookId: Int) {
+        val scrollPositionKey = "scroll_position_$bookId"
+        val scrollPosition = requireActivity().getPreferences(Context.MODE_PRIVATE).getInt(scrollPositionKey, 0)
+
+        webView.post {
+            webView.scrollTo(0, scrollPosition)
+        }
+    }
+
+    private fun applyDarkMode(isDarkMode: Boolean) {
+        webView.loadUrl(
+            "javascript:(function() {" +
+                    // Set background color
+                    "document.body.style.backgroundColor = '${if (isDarkMode) "#202020" else "#ffffff"}';" +
+
+                    // Set text color
+                    "document.body.style.color = '${if (isDarkMode) "#ffffff" else "#000000"}';" +
+
+                    // Set text color for all text elements
+                    "var allTextElements = document.querySelectorAll('body, p, h1, h2, h3, h4, h5, h6, span, div, a, li, td, th');" +
+                    "for (var i = 0; i < allTextElements.length; i++) {" +
+                    "    allTextElements[i].style.color = '${if (isDarkMode) "#ffffff" else "#000000"}';" +
+                    "}" +
+                    "})()"
+        )
+    }
+
+    companion object {
+        private const val KEY_DARK_MODE = "dark_mode"
     }
 }

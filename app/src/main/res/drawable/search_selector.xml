@@ -2,4 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/search_in" android:state_checked="false"/>
     <item android:drawable="@drawable/search_out" android:state_checked="true"/>
+
+
+    <item android:state_pressed="true" android:color="#4242FF"/>
+    <item android:color="@color/main_color"/>
+
 </selector>
