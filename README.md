@@ -31,8 +31,8 @@ Gutenberg Library App, açık kaynaklı bir kitap kütüphanesi uygulamasıdır.
 
 
 # Katkıda Bulunanlar
-[@Fehat Çelik](https://github.com/FerhatStl)
-[@Bedirhan Bedir](https://github.com/BedirhanE)
+[@Fehat ÇELİK](https://github.com/FerhatStl)
+[@Bedirhan ELÇİN](https://github.com/BedirhanE)
 
 
 # Lisans
